@@ -3,24 +3,27 @@ import { createContext, useContext, useEffect, useState } from "react";
 const ProductContext = createContext();
 
 export default function ProductProvider({ children }) {
-  const [products, setProducts] = useState([]);
   const [productFormData, setProductFormData] = useState({
     title: "",
     quantity: 0,
     category: "",
   });
+  const [products, setProducts] = useState([]);
 
   const [removeProducts, setRemoveProducts] = useState(false);
 
   const [searchValue, setSearchValue] = useState("");
   const [sortValue, setSortValue] = useState("latest");
+  const [categoryValue, setCategoryValue] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
 
+  // get all products from localStorage
   useEffect(() => {
     const savedProducts = JSON.parse(localStorage.getItem("products")) || [];
     setProducts(savedProducts);
   }, []);
 
+  // save to localStorage when products changes
   useEffect(() => {
     if (products.length) {
       setRemoveProducts(false);
@@ -30,12 +33,13 @@ export default function ProductProvider({ children }) {
     if (removeProducts) localStorage.removeItem("products");
   }, [products, removeProducts]);
 
+  // save input values
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductFormData({ ...productFormData, [name]: value });
-    
   };
 
+  // add a new product
   const handleAddNewProduct = (e) => {
     e.preventDefault();
     if (
@@ -67,13 +71,14 @@ export default function ProductProvider({ children }) {
     setProducts(remainProducts);
   };
 
-  // sort & search products
+  // sort & search products & filter based on categories
   useEffect(() => {
     let allProducts = products;
     allProducts = filterSearchTitle(allProducts);
     allProducts = sortData(allProducts);
+    allProducts = filterCategory(allProducts);
     setFilteredProducts(allProducts);
-  }, [products, searchValue, sortValue]);
+  }, [products, searchValue, sortValue, categoryValue]);
 
   const handleSearch = (e) => {
     setSearchValue(e.target.value.trim().toLowerCase());
@@ -81,6 +86,10 @@ export default function ProductProvider({ children }) {
 
   const handleSort = (e) => {
     setSortValue(e.target.value);
+  };
+
+  const handleCategoryFilter = (e) => {
+    setCategoryValue(e.target.value);
   };
 
   function filterSearchTitle(array) {
@@ -99,6 +108,11 @@ export default function ProductProvider({ children }) {
     });
   }
 
+  function filterCategory(array) {
+    if (!categoryValue) return array;
+    return array.filter((item) => item.category === categoryValue);
+  }
+
   return (
     <ProductContext.Provider
       value={{
@@ -112,6 +126,8 @@ export default function ProductProvider({ children }) {
         handleChange,
         handleAddNewProduct,
         productFormData,
+        handleCategoryFilter,
+        categoryValue,
       }}
     >
       {children}

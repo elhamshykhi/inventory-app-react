@@ -23,13 +23,15 @@ function AddNewCategory() {
             className="text-sm space-y-3"
             onSubmit={handleAddNewCategory}
           >
+            {/* category title */}
             <TextInput
               name="title"
               label="category title"
               value={categoryFormData.title}
               handle={handleChange}
             />
-
+            
+            {/* category description */}
             <div className="flex flex-col h-full">
               <Label name="category_desc" label="category description" />
 
@@ -42,7 +44,7 @@ function AddNewCategory() {
               ></textarea>
             </div>
 
-            <div className="flex items-center justify-between gap-x-2 pt-3">
+            <div className="flex gap-x-2 pt-3">
               <Button text="cancel" handle={handleCloseCategory} />
               <Button text="add new category" type="submit" />
             </div>

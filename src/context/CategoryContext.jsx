@@ -3,13 +3,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 const CategoryContext = createContext();
 
 export default function CategoryProvider({ children }) {
-  const [categories, setCategories] = useState([]);
-
   const [categoryFormData, setCategoryFormData] = useState({
     title: "",
     description: "",
   });
+  const [categories, setCategories] = useState([]);
 
+  // get categories from localStorage
   useEffect(() => {
     const savedCategories =
       JSON.parse(localStorage.getItem("categories")) || [];
@@ -17,17 +17,20 @@ export default function CategoryProvider({ children }) {
     setCategories(savedCategories);
   }, []);
 
+  // save to localStorage when categories changes
   useEffect(() => {
     if (categories.length) {
       localStorage.setItem("categories", JSON.stringify(categories));
     }
   }, [categories]);
 
+  // save input values
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCategoryFormData({ ...categoryFormData, [name]: value });
   };
 
+  // add a new category
   const handleAddNewCategory = (e) => {
     e.preventDefault();
     if (!categoryFormData.title || !categoryFormData.description) return;

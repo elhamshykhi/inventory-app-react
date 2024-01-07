@@ -24,6 +24,7 @@ function AddNewProduct() {
           </h2>
 
           <form action="" className="space-y-3" onSubmit={handleAddNewProduct}>
+            {/* product title */}
             <TextInput
               name="title"
               label="product title"
@@ -31,6 +32,7 @@ function AddNewProduct() {
               handle={handleChange}
             />
 
+            {/* product quantity */}
             <div>
               <Label name="quantity" label="quantity" />
               <input
@@ -47,6 +49,7 @@ function AddNewProduct() {
               />
             </div>
 
+            {/* product category */}
             <div className="">
               <div className="flex items-center justify-between">
                 <Label name="product_category" label="product category" />
@@ -67,7 +70,7 @@ function AddNewProduct() {
                 value={productFormData.category}
                 onChange={handleChange}
               >
-                <option>select a category</option>
+                <option value="">select a category</option>
                 {categories.map((category) => (
                   <option
                     key={category.title}
@@ -80,7 +83,7 @@ function AddNewProduct() {
               </select>
             </div>
 
-            <div className="flex items-center justify-between gap-x-2 pt-3">
+            <div className="flex gap-x-2 pt-3">
               <Button text="cancel" />
               <Button text="add new product" type="submit" />
             </div>
